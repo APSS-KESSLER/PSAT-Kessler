@@ -58,10 +58,10 @@ void WiFiModule::startServer() {
 	server.begin();
 }
 
-void WiFiModule::processClient(psat::Data const &data) {
+void WiFiModule::processClient(psat::Data const &data, PutCallback putCallback) {
 	if (WiFiClient client = server.available()) {
 		psat::HTTPSession session(client);
-		session.process(data);
+		session.process(data, putCallback);
 	}
 }
 

@@ -2,6 +2,7 @@
 #define PSAT_HTTP_H
 
 #include "WiFi101.h"
+#include "psat-wifi.h"
 
 namespace psat {
 
@@ -17,20 +18,21 @@ private:
 	};
 	
 	WiFiClient &client;
-
 public:
 	HTTPSession(WiFiClient &c);
 	
-	void process(psat::Data const &data);
+	void process(psat::Data const &data, PutCallback callback);
 	
 	~HTTPSession() noexcept;
 
 private:
-	ResponseType parseHeader();
+	ResponseType parseHeader(PutCallback callback);
 	void sendError();
 	void sendPage();
 	void sendData(psat::Data const &data);
 	void sendHeader();
+
+	void write(char const *data, size_t length);
 };
 
 }

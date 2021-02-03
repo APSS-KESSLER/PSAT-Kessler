@@ -1,47 +1,107 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<script>
+			let post = (url, number) => fetch(url, {method: "POST", body: number});
+
+			let led = (number) => {
+				document.getElementById('led').style.top = number + '00%';
+				post("/led", number);
+			};
+
+			let sound = (number) => {
+				document.getElementById('sound').style.top = number + '00%';
+				post("/sound", number);
+			};
+		</script>
 		<style>
-			.c {
-				background-color: #7e57c2;
-				flex: 0 1 150px;
-				margin: 20px;
-				display: flex;
-				text-align: center;
+			* {
+				box-sizing: border-box;
 			}
 
-			.c:hover {
-				background-color: #4d2c91;
-				margin: 30px;
-				flex: 0 1 130px;
+			.sidepanel {
+				background-color:#d1e8e2;
+				flex: 0 1 25%;
+				padding: 2%;
 			}
 
-			h3 {
-				line-height: 150px;
-				margin: 0 0 0 20px;
-				font-family: sans-serif;
-				color: black;
+			.grid {
+				display: grid;
+				grid: auto-flow / 1fr 25%;
+				align-content: start;
 			}
 
-			.c:hover h3 {
-				color: white;
-				line-height: 130px;
+			.grid > span + div {
+				grid-column-start: 2;
+				background-color: #c5ceca;
+				border-radius: 50%;
+				padding-bottom: 20%;
+				margin: 40%;
+				cursor: pointer;
+			}
+
+			.grid > span {
+				place-self: center auto;
+			}
+			
+			.grid > h2 {
+				grid-column-end: span 2;
+			}
+
+			#led + div {
+				grid-area: 2 / -2 / span 3 / span 1;
+				border-left: 5px solid#c5ceca;
+				justify-self: center;
+			}
+
+			#led {
+				grid-area: 2 / 2;
+			}
+
+			#sound + div {
+				grid-area: 6 / -2 / span 4 / span 1;
+				border-left: 5px solid#c5ceca;
+				justify-self: center;
+			}
+
+			#sound {
+				grid-area: 6 / 2;
+			}
+
+			#led, #sound {
+				top: 0;
+				background-color: #116466;
+				border-radius: 50%;
+				padding-bottom: 30%;
+				margin: 35%;
+				z-index: 1;
+				position: relative;
+				transition: top 0.5s;
 			}
 		</style>
 	</head>
 
-	<body style="display: flex; align-items: stretch; height: 100vh; margin: 0;">
-		<div style="background-color:#b085f5; flex: 0 1 25%; display: flex; flex-direction: column; align-items: stretch;">
-			<div class="c"><h3>'Smooth Jazz' RGB Mode</h3><div class="enabled"></div></div>
-			<div class="c"></div>
-			<div class="c"></div>
-			<div class="c"></div>
-			<div class="c"></div>
+	<body style="display: flex; align-items: stretch; height: 100vh; margin: 0; background-color: #2c3531;">
+		<div class="sidepanel grid">
+			<div id="led"></div>
+			<div></div>
+			<h2>LED Modes</h2>
+			<span style="grid-row-start: 2">Smooth Jazz</span><div style="grid-row-start: 2" onclick="led(0)"></div>
+			<span style="grid-row-start: 3">Panic</span><div style="grid-row-start: 3" onclick="led(1)"></div>
+			<span style="grid-row-start: 4">Smooth Jazz</span><div style="grid-row-start: 4" onclick="led(2)"></div>
+
+			<div id="sound"></div>
+			<div></div>
+			<h2>Sound Modes</h2>
+			<span style="grid-row-start: 6">Smooth Jazz</span><div style="grid-row-start: 6" onclick="sound(0)"></div>
+			<span style="grid-row-start: 7">Panic</span><div style="grid-row-start: 7" onclick="sound(1)"></div>
+			<span style="grid-row-start: 8">Smooth Jazz</span><div style="grid-row-start: 8" onclick="sound(2)"></div>
 		</div>
+
 		<div style="flex: auto">
 
 		</div>
-		<div style="background-color:#b085f5; flex: 0 1 25%">
+		<div class="sidepanel">
 
 		</div>
 	</body>

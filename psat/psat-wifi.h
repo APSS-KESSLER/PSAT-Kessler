@@ -17,7 +17,7 @@ public:
 	WiFiModule(uint16_t serverPort = 80);
 	
 	bool setup(cstring wiFiName = "APSSPSAT", cstring wiFiPassword = "nopenope", unsigned long timeoutMs = 10000);
-	void processClient(psat::Data const &data);
+	void processClient(psat::Data const &data, PutCallback putCallback);
 private:
 	void configureLowPowerMode();
 	void configurePinsForBoard();

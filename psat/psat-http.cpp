@@ -19,14 +19,17 @@ char const *header =
 char const *page = 
 	"<!DOCTYPE html>"
 	"<html>"
+	"Hello"
 	"</html>"
 	"\r\n";
 }
 
+char const *newLine = "\r\n\r\n";
+
 namespace psat {
 
 HTTPSession::HTTPSession(WiFiClient &client): client(client) {
-	LOG_INFO_P("HTTP"); Serial.print("Client connected with IP '"); Serial.print(client.remoteIP()); Serial.println("'\n");
+	LOG_INFO_P("HTTP"); Serial.print("Client connected with IP '"); Serial.print(client.remoteIP()); Serial.println('\'');
 }
 
 void HTTPSession::process(psat::Data const &data) {
@@ -58,8 +61,8 @@ HTTPSession::ResponseType HTTPSession::parseHeader() {
 	auto result = ResponseType::ERROR;
 	auto length = client.readBytesUntil(' ', verb, sizeof(verb) - 1);
 
-	if (!strcmp("GET", verb)) {
-		if (strcmp("HEAD", verb)) {
+	if (strcmp("GET", verb) != 0) {
+		if (strcmp("HEAD", verb) == 0) {
 			return ResponseType::HEADER;
 		} else {
 			return ResponseType::ERROR;
@@ -69,29 +72,35 @@ HTTPSession::ResponseType HTTPSession::parseHeader() {
 	char url[16] = { 0 };
 
 	length = client.readBytesUntil(' ', url, sizeof(url) - 1);
-	if (strcmp("/data", url)) {
+	if (strcmp("/data", url) == 0) {
 		return ResponseType::DATA;
-	} else {
+	} else if (strcmp("/", url) == 0) {
 		return ResponseType::PAGE;
+	} else {
+		return ResponseType::ERROR;
 	}
 
-	client.find("\r\n\r\n", 4);
+	// Not sure why the function does not take a char const *, but it seems not to edit the argument
+	client.find(const_cast<char *>(newLine), 4);
 }
 
 void HTTPSession::sendError() {
+	LOG_INFO("HTTP", "Sending error response");
 	client.print(errorResponse);
 }
 
 void HTTPSession::sendPage() {
-
+	LOG_INFO("HTTP", "Sending page response");
+	client.print(page);
 }
 
 void HTTPSession::sendData(psat::Data const &data) {
-
+	LOG_INFO("HTTP", "Sending data response");
 }
 
 void HTTPSession::sendHeader() {
-
+	LOG_INFO("HTTP", "Sending header response");
+	client.print(header);
 }
 
 }

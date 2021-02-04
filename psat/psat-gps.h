@@ -2,8 +2,6 @@
 #define PSAT_GPS_H
 
 #include <Adafruit_GPS.h>
-#include <Adafruit_PMTK.h>
-#include <NMEA_data.h>
 
 namespace psat {
 
@@ -11,6 +9,7 @@ struct Data;
 
 class GpsModule {
 	Adafruit_GPS gps;
+	bool valid = false;
 
 public:
 	GpsModule() : gps(&Serial1) {}

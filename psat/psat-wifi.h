@@ -10,8 +10,8 @@ namespace psat {
 struct Data;
 
 class WiFiModule {
-private:
 	WiFiServer server;
+	bool valid = false;
 	
 public:
 	WiFiModule(uint16_t serverPort = 80);

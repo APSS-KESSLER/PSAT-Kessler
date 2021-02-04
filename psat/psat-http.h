@@ -9,8 +9,8 @@ namespace psat {
 struct Data;
 
 class HTTPSession {
-private:
 	WiFiClient &client;
+
 public:
 	HTTPSession(WiFiClient &c);
 	

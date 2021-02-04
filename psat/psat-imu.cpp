@@ -17,12 +17,20 @@ void ImuModule::setup() {
 	lsm.setGyroRange(LSM6DS_GYRO_RANGE_125_DPS);
 	lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 	lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
+
+	valid = true;
 }
 
 void ImuModule::writeData(psat::Data &data) {
+	if (!valid) {
+		return;
+	}
+
 	sensors_event_t accel, gyro, temp;
 
-	lsm.getEvent(&accel, &gyro, &temp);
+	if (!lsm.getEvent(&accel, &gyro, &temp)) {
+		return;
+	}
 	
 	data.acceleration.x = accel.acceleration.x;
 	data.acceleration.y = accel.acceleration.y;

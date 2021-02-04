@@ -11,20 +11,24 @@ WiFiModule::WiFiModule(uint16_t serverPort):
 { }
 
 void WiFiModule::writeData(psat::Data &data) {
+	if (!valid) {
+		return;
+	}
+
 	data.rssi = WiFi.RSSI();
 }
 
-bool WiFiModule::setup(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs) {
+void WiFiModule::setup(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs) {
 	configurePinsForBoard();
 	configureLowPowerMode();
 	
 	if (!connectToWiFi(wiFiName, wiFiPassword, timeoutMs)) {
-		return false;
+		return;
 	}
 
 	startServer();
 
-	return true;
+	valid = true;
 }
 
 void WiFiModule::configureLowPowerMode() {
@@ -64,6 +68,10 @@ void WiFiModule::startServer() {
 }
 
 void WiFiModule::processClient(psat::Data const &data, PutCallback putCallback) {
+	if (!valid) {
+		return;
+	}
+
 	if (WiFiClient client = server.available()) {
 		psat::HTTPSession session(client);
 		session.process(data, putCallback);

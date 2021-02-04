@@ -1,6 +1,8 @@
 #ifndef PSAT_DATA_H
 #define PSAT_DATA_H
 
+#include <Adafruit_GPS.h>
+
 namespace psat {
 
 struct Data {
@@ -20,6 +22,28 @@ struct Data {
 		float z;
 	} gyro;
 
+	struct {
+		struct {
+			uint8_t h;
+			uint8_t m;
+			uint8_t s;
+			uint8_t ms;
+		} time;
+
+		bool fix;
+
+		struct {
+			nmea_float_t latitude;
+			char lat;
+			nmea_float_t longitude;
+			char lon;
+			nmea_float_t altitude;
+		} location;
+
+		nmea_float_t speed;
+		uint8_t satellites;
+	} gps;
+
 	float temperature;
 
 	size_t writeToString(char *string) const {
@@ -30,8 +54,32 @@ struct Data {
 			"\"rssi\":%d,"
 			"\"acc\":[%f,%f,%f],"
 			"\"gyro\":[%f,%f,%f],"
-			"\"temp\":%f"
-		"}", millis, time, rssi, acceleration.x, acceleration.y, acceleration.z, gyro.x, gyro.y, gyro.z, temperature));
+			"\"temp\":%f,"
+			"\"gps\":{"
+				"\"time\":[%u,%u,%u,%u],"
+				"\"fix\":%d,"
+				"\"location\":\"%f %c %f %c\","
+				"\"speed\":%f,"
+				"\"altitude\":%f,"
+				"\"satellites\":%u"
+			"}"
+		"}", 
+			millis, time, 
+			
+			rssi, 
+			
+			acceleration.x, acceleration.y, acceleration.z,
+			gyro.x, gyro.y, gyro.z, 
+			
+			temperature,
+
+			gps.time.h, gps.time.m, gps.time.s, gps.time.ms,
+			gps.fix,
+			gps.location.latitude, 'c', gps.location.longitude, gps.location.lon,
+			gps.speed,
+			gps.location.altitude,
+			gps.satellites
+		));
 	};
 };
 

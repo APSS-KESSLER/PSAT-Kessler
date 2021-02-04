@@ -8,6 +8,7 @@ namespace psat {
 struct Data;
 
 class RtcModule {
+	bool valid = false;
 	RTC_PCF8523 rtc;
 
 public:

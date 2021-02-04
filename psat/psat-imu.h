@@ -8,6 +8,7 @@ namespace psat {
 struct Data;
 
 class ImuModule {
+	bool valid = false;
 	Adafruit_LSM6DS33 lsm;
 
 public:

@@ -2,12 +2,17 @@
 
 #include "psat-log.h"
 #include "psat-http.h"
+#include "psat-data.h"
 
 namespace psat {
 
 WiFiModule::WiFiModule(uint16_t serverPort): 
 	server(serverPort)
 { }
+
+void WiFiModule::writeData(psat::Data &data) {
+	data.rssi = WiFi.RSSI();
+}
 
 bool WiFiModule::setup(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs) {
 	configurePinsForBoard();

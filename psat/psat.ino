@@ -20,5 +20,7 @@ bool putCallback(char const *url, long data) {
 void loop() {
 	psat::Data data;
 
+	wiFiModule.writeData(data);
+
 	wiFiModule.processClient(data, putCallback);
 }

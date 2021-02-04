@@ -10,13 +10,6 @@ struct Data;
 
 class HTTPSession {
 private:
-	enum class ResponseType {
-		ERROR,
-		PAGE,
-		DATA,
-		HEADER
-	};
-	
 	WiFiClient &client;
 public:
 	HTTPSession(WiFiClient &c);
@@ -26,11 +19,13 @@ public:
 	~HTTPSession() noexcept;
 
 private:
-	ResponseType parseHeader(PutCallback callback);
-	void sendError();
+	void sendOKResponse(char const *data, size_t length, char const *contentType);
+	void sendPutResponse();
+	void sendErrorResponse();
+
+	void sendHeader();
 	void sendPage();
 	void sendData(psat::Data const &data);
-	void sendHeader();
 
 	void write(char const *data, size_t length);
 };

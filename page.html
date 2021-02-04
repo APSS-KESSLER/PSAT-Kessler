@@ -1,18 +1,27 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script>
-			let post = (url, number) => fetch(url, {method: "POST", body: number});
-
-			let led = (number) => {
-				document.getElementById('led').style.top = number + '00%';
-				post("/led", number);
+		<script type="text/javascript">
+			let d=id=>document.getElementById(id);
+			let p=(u,n)=>fetch(u,{method:"PUT",body:n});
+			let g=u=>fetch(u,{method:"GET"});
+			let led=n=>{
+				d('led').style.top=n+'00%';
+				p("/led",n);
 			};
 
-			let sound = (number) => {
-				document.getElementById('sound').style.top = number + '00%';
-				post("/sound", number);
+			let sound=n=>{
+				d('sound').style.top =n +'00%';
+				p("/sound", n);
 			};
+
+			setInterval(()=>{
+				g("/data")
+					.then(r=>r.json())
+					.then(t=>{
+						d('rssi').innerText=t.rssi;
+					});
+			},5000);
 		</script>
 		<style>
 			* {
@@ -78,6 +87,17 @@
 				position: relative;
 				transition: top 0.5s;
 			}
+
+			#data {
+				background-color:#c5ceca;
+				display: grid;
+				grid: auto-flow / 1fr 1fr;
+			}
+
+			#chart {
+				background-color: #c5ceca;
+				place-self: stretch;
+			}
 		</style>
 	</head>
 
@@ -98,9 +118,13 @@
 			<span style="grid-row-start: 8">Smooth Jazz</span><div style="grid-row-start: 8" onclick="sound(2)"></div>
 		</div>
 
-		<div style="flex: auto">
-
+		<div style="flex: auto; display: grid; row-gap: 50px; margin: 50px;">
+			<div id="data">
+				<span>WiFi Strength (RSSI): <span id="rssi"></span></span>
+			</div>
+			<canvas id="chart">
 		</div>
+
 		<div class="sidepanel">
 
 		</div>

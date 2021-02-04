@@ -18,6 +18,7 @@ public:
 	
 	bool setup(cstring wiFiName = "APSSPSAT", cstring wiFiPassword = "nopenope", unsigned long timeoutMs = 10000);
 	void processClient(psat::Data const &data, PutCallback putCallback);
+	void writeData(psat::Data &data);
 private:
 	void configureLowPowerMode();
 	void configurePinsForBoard();

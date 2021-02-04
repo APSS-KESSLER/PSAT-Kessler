@@ -52,7 +52,7 @@ bool WiFiModule::connectToWiFi(cstring wiFiName, cstring wiFiPassword, unsigned 
 		return false;
 	}
 
-	LOG_INFO_P("WiFi"); Serial.print("Connected with IP '"); Serial.print(IPAddress(WiFi.localIP())); Serial.println("'\n");
+	LOG_INFO_P("WiFi"); Serial.print("Connected with IP '"); Serial.print(IPAddress(WiFi.localIP())); Serial.println("'");
 
 	server.begin();
 

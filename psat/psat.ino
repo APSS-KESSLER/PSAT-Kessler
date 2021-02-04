@@ -2,9 +2,13 @@
 #include "psat-data.h"
 #include "psat-log.h"
 #include "psat-rtc.h"
+#include "psat-sd.h"
+#include "psat-imu.h"
 
 psat::WiFiModule wiFiModule;
 psat::RtcModule rtcModule;
+psat::CardModule cardModule;
+psat::ImuModule imuModule;
 
 void setup() {
 	Serial.begin(115200);
@@ -12,6 +16,8 @@ void setup() {
 
 	wiFiModule.setup();
 	rtcModule.setup();
+	cardModule.setup();
+	imuModule.setup();
 }
 
 bool putCallback(char const *url, long data) {
@@ -33,8 +39,11 @@ bool putCallback(char const *url, long data) {
 void loop() {
 	psat::Data data;
 
+	data.millis = millis();
 	wiFiModule.writeData(data);
 	rtcModule.writeData(data);
+	imuModule.writeData(data);
 
+	cardModule.writeToCard(data);
 	wiFiModule.processClient(data, putCallback);
 }

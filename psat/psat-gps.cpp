@@ -10,7 +10,8 @@ void GpsModule::setup() {
 		return;
 	}
 
-	gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCONLY);
+	*gps.lastNMEA() = '\0';
+	gps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
 	gps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
 
 	LOG_INFO("GPS", "Enabled GPS at 1HZ");
@@ -23,25 +24,26 @@ void GpsModule::writeData(psat::Data &data) {
 		return;
 	}
 
-	while (!gps.newNMEAreceived() && gps.read() != 0);
-	
-	if (gps.newNMEAreceived()) {
-		char *lastNmeaString = gps.lastNMEA();
+	while (gps.read() != 0) {
+		if (gps.newNMEAreceived()) {
+			char *lastNmeaString = gps.lastNMEA();
 		
-		if (!gps.parse(lastNmeaString)) {
-			LOG_ERROR_P("GPS"); Serial.printf("Unable to parse NMEA string '%s'", lastNmeaString);
-			return;
+			if (!gps.parse(lastNmeaString)) {
+				LOG_ERROR("GPS", "Unable to parse NMEA string");
+			}
+		
+			LOG_INFO_P("GPS"); Serial.println(lastNmeaString);
 		}
-		
-		LOG_INFO_F("GPS", "%s", lastNmeaString);
 	}
 
 	auto &o = data.gps;
 
+	o.time.y = gps.year;
+	o.time.mo = gps.month;
+	o.time.d = gps.day;
 	o.time.h = gps.hour;
 	o.time.m = gps.minute;
 	o.time.s = gps.seconds;
-	o.time.ms = gps.milliseconds;
 	o.fix = gps.fix;
 	o.location.latitude = gps.latitudeDegrees;
 	o.location.lat = gps.lat;

@@ -69,7 +69,11 @@ void WiFiModule::startServer() {
 
 void WiFiModule::processClient(psat::Data const &data, PutCallback putCallback) {
 	if (!valid) {
-		return;
+		if (!connectToWiFi()) {
+			return;
+		}
+
+		valid = true;
 	}
 
 	if (WiFiClient client = server.available()) {

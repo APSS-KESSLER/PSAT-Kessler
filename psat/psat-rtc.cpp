@@ -13,7 +13,7 @@ void RtcModule::setup() {
 	if (!rtc.initialized() || rtc.lostPower()) {
 		DateTime compileTime = DateTime(F(__DATE__), F(__TIME__));
 
-		LOG_INFO_F("RTC", "Setting clock to %s", compileTime.timestamp());
+		LOG_INFO("RTC", "Setting clock to " __DATE__ " " __TIME__);
 		setTime(compileTime);
 	}
 

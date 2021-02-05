@@ -24,10 +24,12 @@ struct Data {
 
 	struct {
 		struct {
+			uint8_t y;
+			uint8_t mo;
+			uint8_t d;
 			uint8_t h;
 			uint8_t m;
 			uint8_t s;
-			uint8_t ms;
 		} time;
 
 		bool fix;
@@ -45,6 +47,10 @@ struct Data {
 	} gps;
 
 	float temperature;
+	float pressure;
+	float pressureAltitude;
+
+	uint32_t numberOfPhotosTaken;
 
 	size_t writeToString(char *string) const {
 		return static_cast<size_t>(sprintf(string,
@@ -55,14 +61,17 @@ struct Data {
 			"\"acc\":[%f,%f,%f],"
 			"\"gyro\":[%f,%f,%f],"
 			"\"temp\":%f,"
+			"\"pressure\":%f,"
+			"\"pressureAltitude\":%f,"
 			"\"gps\":{"
-				"\"time\":[%u,%u,%u,%u],"
+				"\"time\":[%u,%u,%u,%u,%u,%u],"
 				"\"fix\":%d,"
-				"\"location\":\"%f %c %f %c\","
+				"\"location\":\"%f %f\","
 				"\"speed\":%f,"
 				"\"altitude\":%f,"
 				"\"satellites\":%u"
-			"}"
+			"},"
+			"\"photoNumber\":%u"
 		"}", 
 			millis, time, 
 			
@@ -71,14 +80,15 @@ struct Data {
 			acceleration.x, acceleration.y, acceleration.z,
 			gyro.x, gyro.y, gyro.z, 
 			
-			temperature,
+			temperature, pressure, pressureAltitude,
 
-			gps.time.h, gps.time.m, gps.time.s, gps.time.ms,
+			gps.time.y, gps.time.mo, gps.time.d, gps.time.h, gps.time.m, gps.time.s,
 			gps.fix,
-			gps.location.latitude, 'c', gps.location.longitude, gps.location.lon,
+			gps.location.latitude, gps.location.longitude,
 			gps.speed,
 			gps.location.altitude,
-			gps.satellites
+			gps.satellites,
+			numberOfPhotosTaken
 		));
 	};
 };

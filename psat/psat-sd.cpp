@@ -33,7 +33,27 @@ void CardModule::writeHeader() {
 		return;
 	}
 	
-	fileOutput.println("Millis [ms],Time [s since 1 Jan 1970],WiFi Strength [dBm]");
+	fileOutput.println(
+		"Millis [ms],"
+		"Time [s since 1 Jan 1970],"
+		"WiFi Strength [dBm],"
+		"Acc X [ms-2],"
+		"Acc Y [ms-2],"
+		"Acc Z [ms-2],"
+		"Gyro X [rad/s],"
+		"Gyro Y [rad/s],"
+		"Gyro Z [rad/s],"
+		"Temp [C],"
+		"Pressure [Pa],"
+		"Pressure Altitude [m],"
+		"GPS Fix [bool],"
+		"GPS Lat [deg],"
+		"GPS Long [deg],"
+		"GPS Speed [ms-1],"
+		"GPS Altitude [m],"
+		"GPS Satellites [1],"
+		"Number of Photos Taken [1]"
+	);
 	fileOutput.flush();
 }
 

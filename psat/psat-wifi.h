@@ -22,7 +22,7 @@ public:
 private:
 	void configureLowPowerMode();
 	void configurePinsForBoard();
-	bool connectToWiFi(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs);
+	bool connectToWiFi(cstring wiFiName = "APSSPSAT", cstring wiFiPassword = "nopenope", unsigned long timeoutMs = 10000);
 	void startServer();
 };
 

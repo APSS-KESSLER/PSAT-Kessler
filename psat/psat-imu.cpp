@@ -18,6 +18,16 @@ void ImuModule::setup() {
 	lsm.setAccelDataRate(LSM6DS_RATE_12_5_HZ);
 	lsm.setGyroDataRate(LSM6DS_RATE_12_5_HZ);
 
+	if (!lis.begin_I2C()) {
+		LOG_ERROR("ISM", "Unable to find LIS3MDL");
+		return;
+	}
+
+	lis.setDataRate(LIS3MDL_DATARATE_155_HZ);
+	lis.setOperationMode(LIS3MDL_CONTINUOUSMODE);
+	lis.setPerformanceMode(LIS3MDL_MEDIUMMODE);
+	lis.setRange(LIS3MDL_RANGE_4_GAUSS);
+
 	valid = true;
 }
 
@@ -26,21 +36,25 @@ void ImuModule::writeData(psat::Data &data) {
 		return;
 	}
 
-	sensors_event_t accel, gyro, temp;
+	sensors_event_t accel, gyro, temp, mag;
 
-	if (!lsm.getEvent(&accel, &gyro, &temp)) {
-		return;
+	if (lsm.getEvent(&accel, &gyro, &temp)) {
+		data.acceleration.x = accel.acceleration.x;
+		data.acceleration.y = accel.acceleration.y;
+		data.acceleration.z = accel.acceleration.z;
+
+		data.gyro.x = gyro.gyro.x;
+		data.gyro.y = gyro.gyro.y;
+		data.gyro.z = gyro.gyro.z;
+
+		data.temperature = temp.temperature;
 	}
-	
-	data.acceleration.x = accel.acceleration.x;
-	data.acceleration.y = accel.acceleration.y;
-	data.acceleration.z = accel.acceleration.z;
 
-	data.gyro.x = gyro.gyro.x;
-	data.gyro.y = gyro.gyro.y;
-	data.gyro.z = gyro.gyro.z;
-
-	data.temperature = temp.temperature;
+	if (lis.getEvent(&mag)) {
+		data.mag.x = mag.magnetic.x;
+		data.mag.y = mag.magnetic.y;
+		data.mag.z = mag.magnetic.z;
+	}
 }
 
 }

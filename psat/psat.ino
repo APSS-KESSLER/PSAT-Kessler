@@ -53,6 +53,9 @@ bool putCallback(char const *url, long data) {
 	} else if (strcmp(url, "/time") == 0) {
 		rtcModule.setTime(DateTime(static_cast<uint32_t>(data)));
 		return true;
+	} else if (strcmp(url, "/altitude") == 0) {
+		bmpModule.setKnownAltitude(data / 1000.0f);
+		return true;
 	}
 
 	return false;

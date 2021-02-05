@@ -32,7 +32,7 @@ void GpsModule::writeData(psat::Data &data) {
 				LOG_ERROR("GPS", "Unable to parse NMEA string");
 			}
 		
-			LOG_INFO_P("GPS"); Serial.println(lastNmeaString);
+			LOG_INFO_P("GPS"); Serial.print(lastNmeaString);
 		}
 	}
 

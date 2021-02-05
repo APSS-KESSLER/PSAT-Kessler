@@ -23,7 +23,7 @@ void BmpModule::setKnownAltitude(float altitude) {
 		return;
 	}
 
-	pressureAtSealevel = bmp.seaLevelForAltitude(altitude, bmp.readPressure());
+	pressureAtSealevel = bmp.seaLevelForAltitude(altitude, bmp.readPressure() / 100.0);
 }
 
 void BmpModule::writeData(psat::Data &data) {

@@ -23,6 +23,12 @@ struct Data {
 	} gyro;
 
 	struct {
+		float x;
+		float y;
+		float z;
+	} mag;
+
+	struct {
 		struct {
 			uint8_t y;
 			uint8_t mo;
@@ -60,13 +66,15 @@ struct Data {
 			"\"rssi\":%d,"
 			"\"acc\":[%f,%f,%f],"
 			"\"gyro\":[%f,%f,%f],"
+			"\"mag\":[%f,%f,%f],"
 			"\"temp\":%f,"
 			"\"pressure\":%f,"
 			"\"pressureAltitude\":%f,"
 			"\"gps\":{"
 				"\"time\":[%u,%u,%u,%u,%u,%u],"
 				"\"fix\":%d,"
-				"\"location\":\"%f %f\","
+				"\"latitude\":%f,"
+				"\"longitude\":%f,"
 				"\"speed\":%f,"
 				"\"altitude\":%f,"
 				"\"satellites\":%u"
@@ -79,6 +87,7 @@ struct Data {
 			
 			acceleration.x, acceleration.y, acceleration.z,
 			gyro.x, gyro.y, gyro.z, 
+			mag.x, mag.y, mag.z, 
 			
 			temperature, pressure, pressureAltitude,
 

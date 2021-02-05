@@ -43,6 +43,9 @@ void CardModule::writeHeader() {
 		"Gyro X [rad/s],"
 		"Gyro Y [rad/s],"
 		"Gyro Z [rad/s],"
+		"Mag X [uT],"
+		"Mag Y [uT],"
+		"Mag Z [uT],"
 		"Temp [C],"
 		"Pressure [Pa],"
 		"Pressure Altitude [m],"
@@ -62,7 +65,55 @@ void CardModule::writeToCard(psat::Data const &data) {
 		return;
 	}
 	
-	fileOutput.printf("%lu,%u,%d\n", data.millis, data.time, data.rssi);
+	fileOutput.printf(
+		"%lu,"
+		"%u,"
+		"%d,"
+
+		"%f,"
+		"%f,"
+		"%f,"
+		
+		"%f,"
+		"%f,"
+		"%f,"
+
+		"%f,"
+		"%f,"
+		"%f,"
+		
+		"%f,"
+		"%f,"
+		"%f,"
+
+		"%c,"
+		"%f,"
+		"%f,"
+		"%f,"
+		"%f,"
+		"%u,"
+		"%u,"
+
+		"\n", 
+	
+		data.millis, data.time, data.rssi,
+	
+		data.acceleration.x, data.acceleration.y, data.acceleration.z,
+	
+		data.gyro.x, data.gyro.y, data.gyro.z,
+
+		data.mag.x, data.mag.y, data.mag.z,
+	
+		data.temperature, data.pressure, data.pressureAltitude,
+	
+		data.gps.fix ? 'y' : 'n',
+		data.gps.location.latitude, data.gps.location.longitude,
+		data.gps.speed, data.gps.location.altitude,
+		data.gps.satellites, 
+	
+		data.numberOfPhotosTaken
+	);
+
 	fileOutput.flush();
 }
 

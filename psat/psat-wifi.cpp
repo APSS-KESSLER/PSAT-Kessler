@@ -52,7 +52,7 @@ bool WiFiModule::connectToWiFi(cstring wiFiName, cstring wiFiPassword, unsigned 
 	WiFi.setTimeout(timeoutMs);
 	
 	if (WiFi.begin(wiFiName, wiFiPassword) != WL_CONNECTED) {
-		LOG_ERROR_F("WiFi", "Failed to connect in %ulms (%d)", timeoutMs, WiFi.status());
+		LOG_ERROR_F("WiFi", "Failed to connect in %lums (%d)", timeoutMs, WiFi.status());
 		return false;
 	}
 

@@ -13,10 +13,7 @@ constexpr unsigned long overflowDetect = ~0u / 2;
 namespace psat {
 
 void CameraModule::setup() {
-	// initialize the digital pins as output.
-	pinMode(cameraLED, OUTPUT);
 	pinMode(cameraTrigger, OUTPUT);
-	digitalWrite(cameraLED, HIGH);  
 	digitalWrite(cameraTrigger, HIGH);
 
 	LOG_INFO("CAMERA", "Setup camera");

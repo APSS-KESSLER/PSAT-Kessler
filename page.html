@@ -258,6 +258,9 @@
 			<div onclick="p('/camera',2)">Take video</div>
 			<div onclick="p('/altitude',+prompt('Altitude (mm above sealevel)', '0'))">Set altitude</div>
 			<div onclick="p('/time',+prompt('Time (unix)', '0'))">Set rtc time</div>
+			<div onclick="p('/gps',+prompt('Ms to wait', '30000'))">Turn off chip until Gps lock is found</div>
+			<div onclick="p('/arm',0)">Arm the psat to detect launch</div>
+			<div onclick="p('/arm',1)">Disarm the psat to detect launch</div>
 		</div>
 	</body>
 </html>

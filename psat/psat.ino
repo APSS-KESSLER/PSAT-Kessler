@@ -16,9 +16,18 @@ psat::GpsModule gpsModule;
 psat::BmpModule bmpModule;
 psat::CameraModule cameraModule;
 
+bool waitForGps = false;
+unsigned long stopWaitingForGps;
+const int led = 13;
+bool armed = false;
+
 void setup() {
+	pinMode(led, OUTPUT);
+	digitalWrite(led, LOW);
+
 	Serial.begin(115200);
-	while (!Serial);
+
+	delay(10000);
 
 	cameraModule.setup();
 	wiFiModule.setup();
@@ -56,19 +65,43 @@ bool putCallback(char const *url, long data) {
 	} else if (strcmp(url, "/altitude") == 0) {
 		bmpModule.setKnownAltitude(data / 1000.0f);
 		return true;
+	} else if (strcmp(url, "/gps") == 0) {
+		waitForGps = true;
+		stopWaitingForGps = millis() + static_cast<unsigned long>(data);
+		wiFiModule.disconnect();
+		return true;
+	} else if (strcmp(url, "/arm") == 0) {
+		armed = data == 0;
+		return true;
 	}
 
 	return false;
 }
 
 void loop() {
-	static unsigned long lastGpsRead = ~0u;
+	static unsigned long lastGpsRead = ~0u / 2;
+	static unsigned long lastLEDToggle = ~0u / 2;
+	static bool ledOn = false;
 
 	psat::Data data = { 0 };
 
 	data.millis = millis();
 
 	gpsModule.writeData(data);
+
+	if (armed && data.millis - lastLEDToggle > (waitForGps ? 1500 : 500)) {
+		digitalWrite(led, ledOn ? LOW : HIGH);
+		ledOn = !ledOn;
+	}
+
+	if (waitForGps) {
+		if (data.gps.fix || stopWaitingForGps - data.millis > (~0u / 2)) {
+			wiFiModule.setup();
+			waitForGps = false;
+		}
+
+		return;
+	}
 
 	if (data.gps.fix && data.millis - lastGpsRead > 10000) {
 		LOG_INFO("Main", "Used Gps to set RTC");

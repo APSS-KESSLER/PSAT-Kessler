@@ -8,7 +8,6 @@ namespace psat {
 struct Data;
 
 class CameraModule {
-	const int cameraLED = 13;
 	const int cameraTrigger = 5;
 	const int maxPhotos = 999;
 

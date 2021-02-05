@@ -39,6 +39,10 @@ void WiFiModule::configurePinsForBoard() {
 	WiFi.setPins(8, 7, 4, 2);
 }
 
+void WiFiModule::disconnect() {
+	WiFi.disconnect();
+}
+
 bool WiFiModule::connectToWiFi(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs) {
 	if (WiFi.status() == WL_NO_SHIELD) {
 		LOG_ERROR("WiFi", "No WiFi module found");

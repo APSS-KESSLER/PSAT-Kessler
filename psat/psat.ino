@@ -7,6 +7,7 @@
 #include "psat-gps.h"
 #include "psat-bmp.h"
 #include "psat-camera.h"
+#include "psat-led.h"
 
 psat::WiFiModule wiFiModule;
 psat::RtcModule rtcModule;
@@ -15,6 +16,7 @@ psat::ImuModule imuModule;
 psat::GpsModule gpsModule;
 psat::BmpModule bmpModule;
 psat::CameraModule cameraModule;
+psat::LedModule ledModule;
 
 bool waitForGps = false;
 unsigned long stopWaitingForGps;
@@ -22,6 +24,8 @@ const int led = 13;
 bool armed = false;
 
 void setup() {
+	delay(3000);
+
 	pinMode(led, OUTPUT);
 	digitalWrite(led, LOW);
 
@@ -36,6 +40,7 @@ void setup() {
 	imuModule.setup();
 	gpsModule.setup();
 	bmpModule.setup();
+	ledModule.setup();
 
 	bmpModule.setKnownAltitude(0.0f);
 }
@@ -44,6 +49,7 @@ bool putCallback(char const *url, long data) {
 	LOG_INFO_P("Main"); Serial.print("Put request to '"); Serial.print(url); Serial.printf("' arg: %ld\n", data);
 
 	if (strcmp(url, "/led") == 0) {
+		ledModule.setLED(static_cast<int>(data));
 		return true;
 	} else if (strcmp(url, "/sound") == 0) {
 		return true;
@@ -112,6 +118,7 @@ void loop() {
 		lastGpsRead = data.millis;
 	}
 
+	ledModule.showLEDs();
 	wiFiModule.writeData(data);
 	rtcModule.writeData(data);
 	imuModule.writeData(data);

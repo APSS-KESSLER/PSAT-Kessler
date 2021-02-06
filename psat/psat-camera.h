@@ -22,7 +22,7 @@ public:
 	void writeData(psat::Data &data);
 	void runCameraTasks();
 	void takeVideo(unsigned long lengthMs = 10000u);
-	void takePicture(size_t numberOfPhotos = 1, unsigned long interval = 1000u);
+	void takePicture(size_t numberOfPhotos = 1, unsigned long interval = 5000u);
 	size_t numberOfPhotosRemaining();
 
 private:

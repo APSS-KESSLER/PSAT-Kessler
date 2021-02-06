@@ -3,6 +3,18 @@
 #include "psat-log.h"
 #include "psat-data.h"
 
+namespace {
+
+const float magXOffset = 26.34f;
+const float magYOffset = 27.61f;
+const float magZOffset = 127.30f;
+
+const float gyroXOffset = 0.0696f;
+const float gyroYOffset = -0.1140f;
+const float gyroZOffset = -0.1139f;
+
+}
+
 namespace psat {
 
 void ImuModule::setup() {
@@ -43,17 +55,17 @@ void ImuModule::writeData(psat::Data &data) {
 		data.acceleration.y = accel.acceleration.y;
 		data.acceleration.z = accel.acceleration.z;
 
-		data.gyro.x = gyro.gyro.x;
-		data.gyro.y = gyro.gyro.y;
-		data.gyro.z = gyro.gyro.z;
+		data.gyro.x = gyro.gyro.x - gyroXOffset;
+		data.gyro.y = gyro.gyro.y - gyroYOffset;
+		data.gyro.z = gyro.gyro.z - gyroZOffset;
 
 		data.temperature = temp.temperature;
 	}
 
 	if (lis.getEvent(&mag)) {
-		data.mag.x = mag.magnetic.x;
-		data.mag.y = mag.magnetic.y;
-		data.mag.z = mag.magnetic.z;
+		data.mag.x = mag.magnetic.x - magXOffset;
+		data.mag.y = mag.magnetic.y - magYOffset;
+		data.mag.z = mag.magnetic.z - magZOffset;
 	}
 }
 

@@ -55,7 +55,7 @@ bool putCallback(char const *url, long data) {
 		ledModule.setLED(static_cast<int>(data));
 		return true;
 	} else if (strcmp(url, "/sound") == 0) {
-		buzModule.selectSong(static_cast<int>(0));
+		buzModule.selectSong(static_cast<int>(data));
 		return true;
 	} else if (strcmp(url, "/camera") == 0) {
 		switch (data) {

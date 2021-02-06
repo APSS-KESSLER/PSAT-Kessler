@@ -11,11 +11,11 @@ WiFiModule::WiFiModule(uint16_t serverPort):
 { }
 
 void WiFiModule::writeData(psat::Data &data) {
-	if (!valid) {
-		return;
+	if (WiFi.status() != WL_CONNECTED) {
+		data.rssi = -100;
+	} else {
+		data.rssi = WiFi.RSSI();
 	}
-
-	data.rssi = WiFi.RSSI();
 }
 
 void WiFiModule::setup(cstring wiFiName, cstring wiFiPassword, unsigned long timeoutMs) {
@@ -27,8 +27,6 @@ void WiFiModule::setup(cstring wiFiName, cstring wiFiPassword, unsigned long tim
 	}
 
 	startServer();
-
-	valid = true;
 }
 
 void WiFiModule::configureLowPowerMode() {
@@ -72,12 +70,12 @@ void WiFiModule::startServer() {
 }
 
 void WiFiModule::processClient(psat::Data const &data, PutCallback putCallback) {
-	if (!valid) {
+	if (WiFi.status() != WL_CONNECTED) {
 		if (!connectToWiFi()) {
 			return;
 		}
 
-		valid = true;
+		startServer();
 	}
 
 	if (WiFiClient client = server.available()) {

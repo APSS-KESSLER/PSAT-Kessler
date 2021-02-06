@@ -11,7 +11,6 @@ struct Data;
 
 class WiFiModule {
 	WiFiServer server;
-	bool valid = false;
 	
 public:
 	WiFiModule(uint16_t serverPort = 80);

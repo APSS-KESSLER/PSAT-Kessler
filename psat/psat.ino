@@ -8,6 +8,7 @@
 #include "psat-bmp.h"
 #include "psat-camera.h"
 #include "psat-led.h"
+#include "psat-buz.h"
 
 psat::WiFiModule wiFiModule;
 psat::RtcModule rtcModule;
@@ -17,6 +18,7 @@ psat::GpsModule gpsModule;
 psat::BmpModule bmpModule;
 psat::CameraModule cameraModule;
 psat::LedModule ledModule;
+psat::BuzModule buzModule;
 
 bool waitForGps = false;
 unsigned long stopWaitingForGps;
@@ -41,6 +43,7 @@ void setup() {
 	gpsModule.setup();
 	bmpModule.setup();
 	ledModule.setup();
+	buzModule.setup();
 
 	bmpModule.setKnownAltitude(0.0f);
 }
@@ -52,6 +55,7 @@ bool putCallback(char const *url, long data) {
 		ledModule.setLED(static_cast<int>(data));
 		return true;
 	} else if (strcmp(url, "/sound") == 0) {
+		buzModule.selectSong(static_cast<int>(0));
 		return true;
 	} else if (strcmp(url, "/camera") == 0) {
 		switch (data) {
@@ -125,6 +129,7 @@ void loop() {
 	bmpModule.writeData(data);
 	cameraModule.runCameraTasks();
 	cameraModule.writeData(data);
+	buzModule.loop();
 
 	cardModule.writeToCard(data);
 	wiFiModule.processClient(data, putCallback);

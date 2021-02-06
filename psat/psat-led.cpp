@@ -45,7 +45,7 @@ void LedModule::setLED(int mode) {
 		currentBlending = LINEARBLEND;
 		break;
 	case 2:
-		fill_solid(currentPalette, 20, CRGB::Black);
+		fill_solid(currentPalette, 16, CRGB::Black);
 		currentPalette[0] = CRGB::White;
 		currentPalette[4] = CRGB::White;
 		currentPalette[8] = CRGB::White;
@@ -53,11 +53,22 @@ void LedModule::setLED(int mode) {
 		currentBlending = LINEARBLEND;
 		break;
 	case 3:
-		fill_solid(currentPalette, 20, CRGB::Black);
-		currentPalette[0] = CHSV(HUE_RED, 200, 200);
-		currentPalette[4] = CHSV(HUE_RED, 200, 200);
-		currentPalette[8] = CHSV(HUE_RED, 200, 200);
-		currentPalette[12] = CHSV(HUE_RED, 200, 200);
+		fill_solid(currentPalette, 16, CRGB::Black);
+
+		currentPalette[0] = CHSV(HUE_RED, 255, 80);
+		currentPalette[4] = CHSV(HUE_RED, 255, 80);
+		currentPalette[8] = CHSV(HUE_RED, 255, 80);
+		currentPalette[12] = CHSV(HUE_RED, 255, 80);
+
+		currentPalette[1] = CHSV(HUE_RED, 255, 128);
+		currentPalette[5] = CHSV(HUE_RED, 255, 128);
+		currentPalette[9] = CHSV(HUE_RED, 255, 128);
+		currentPalette[13] = CHSV(HUE_RED, 255, 128);
+		
+		currentPalette[2] = CHSV(HUE_RED, 255, 160);
+		currentPalette[6] = CHSV(HUE_RED, 255, 160);
+		currentPalette[10] = CHSV(HUE_RED, 255, 160);
+		currentPalette[14] = CHSV(HUE_RED, 255, 160);
 		currentBlending = LINEARBLEND;	
 	}
 

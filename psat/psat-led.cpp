@@ -16,6 +16,11 @@ void LedModule::setup() {
 }
 
 void LedModule::showLEDs() {
+	if (!on) {
+		FastLED.clear(true);
+		return;
+	}
+
 	static uint8_t startIndex = 0;
 	startIndex = startIndex + 1;
 
@@ -33,18 +38,30 @@ void LedModule::showLEDs() {
 void LedModule::setLED(int mode) {
 	switch(mode) {
 	case 0:
+		on = false;
+		return;
+	case 1:
 		currentPalette = RainbowStripeColors_p;
 		currentBlending = LINEARBLEND;
 		break;
-	case 1:
-		fill_solid(currentPalette, 16, CRGB::Black);
+	case 2:
+		fill_solid(currentPalette, 20, CRGB::Black);
 		currentPalette[0] = CRGB::White;
 		currentPalette[4] = CRGB::White;
 		currentPalette[8] = CRGB::White;
 		currentPalette[12] = CRGB::White;
 		currentBlending = LINEARBLEND;
 		break;
+	case 3:
+		fill_solid(currentPalette, 20, CRGB::Black);
+		currentPalette[0] = CHSV(HUE_RED, 200, 200);
+		currentPalette[4] = CHSV(HUE_RED, 200, 200);
+		currentPalette[8] = CHSV(HUE_RED, 200, 200);
+		currentPalette[12] = CHSV(HUE_RED, 200, 200);
+		currentBlending = LINEARBLEND;	
 	}
+
+	on = true;
 }
 
 }

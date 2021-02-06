@@ -6,6 +6,7 @@
 namespace psat {
 
 struct Data {
+	int stage;
 	unsigned long millis;
 	uint32_t time;
 	int32_t rssi;
@@ -62,6 +63,7 @@ struct Data {
 		return static_cast<size_t>(sprintf(string,
 		"{"
 			"\"millis\":%lu,"
+			"\"stage\":%d,"
 			"\"time\":%u,"
 			"\"rssi\":%d,"
 			"\"acc\":[%f,%f,%f],"
@@ -81,7 +83,7 @@ struct Data {
 			"},"
 			"\"photoNumber\":%u"
 		"}", 
-			millis, time, 
+			millis, stage, time, 
 			
 			rssi, 
 			

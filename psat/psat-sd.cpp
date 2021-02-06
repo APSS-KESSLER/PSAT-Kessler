@@ -36,6 +36,7 @@ void CardModule::writeHeader() {
 	fileOutput.println(
 		"Millis [ms],"
 		"Time [s since 1 Jan 1970],"
+		"Stage [1],"
 		"WiFi Strength [dBm],"
 		"Acc X [ms-2],"
 		"Acc Y [ms-2],"
@@ -68,6 +69,7 @@ void CardModule::writeToCard(psat::Data const &data) {
 	fileOutput.printf(
 		"%lu,"
 		"%u,"
+		"%d,"
 		"%d,"
 
 		"%f,"

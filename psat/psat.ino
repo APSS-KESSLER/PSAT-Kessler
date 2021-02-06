@@ -23,7 +23,9 @@ psat::BuzModule buzModule;
 bool waitForGps = false;
 unsigned long stopWaitingForGps;
 const int led = 13;
-bool armed = false;
+bool armed = true;
+
+int stage = 0;
 
 void setup() {
 	delay(3000);
@@ -56,6 +58,11 @@ bool putCallback(char const *url, long data) {
 		return true;
 	} else if (strcmp(url, "/sound") == 0) {
 		buzModule.selectSong(static_cast<int>(data));
+
+		if (data == 2) {
+			ledModule.setLED(3);
+		}
+
 		return true;
 	} else if (strcmp(url, "/camera") == 0) {
 		switch (data) {
@@ -82,10 +89,51 @@ bool putCallback(char const *url, long data) {
 		return true;
 	} else if (strcmp(url, "/arm") == 0) {
 		armed = data == 0;
+		stage = 0;
 		return true;
 	}
 
 	return false;
+}
+
+void doStageLogic(psat::Data &data) {
+	float altitude = 0.0f;
+	float acc = 0.0f;
+
+	float rawAcc = data.acceleration.x * data.acceleration.x + data.acceleration.y * data.acceleration.y + data.acceleration.z * data.acceleration.z;
+	altitude = altitude * 0.5f + data.pressureAltitude * 0.5f;
+	acc = acc * 0.75f + rawAcc * 0.25f;
+
+	LOG_INFO_F("Main", "Running altitude: %fm acceleration: %f(ms-2)^2", altitude, acc);
+	LOG_INFO_F("Main", "Stage: %d", stage);
+
+	data.stage = stage;
+
+	switch (stage) {
+	case 0:
+		if (altitude > 100.0) {
+			stage++;
+		}
+
+		break;
+	case 1:
+		if (acc < 400.0) {
+			stage++;
+			cameraModule.takePicture(100);
+			cameraModule.takeVideo(30000);
+		} else if (altitude < 50.0) {
+			stage++;
+		}
+
+		break;
+	case 2:
+		if (altitude < 50.0) {
+			stage++;
+			cameraModule.takeVideo(30000);
+		}
+
+		break;
+	}
 }
 
 void loop() {
@@ -106,7 +154,6 @@ void loop() {
 
 	if (waitForGps) {
 		if (data.gps.fix || stopWaitingForGps - data.millis > (~0u / 2)) {
-			wiFiModule.setup();
 			waitForGps = false;
 		}
 
@@ -127,6 +174,11 @@ void loop() {
 	rtcModule.writeData(data);
 	imuModule.writeData(data);
 	bmpModule.writeData(data);
+
+	if (armed) {
+		doStageLogic(data);
+	}
+
 	cameraModule.runCameraTasks();
 	cameraModule.writeData(data);
 	buzModule.loop();

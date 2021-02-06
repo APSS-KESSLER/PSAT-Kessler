@@ -9,6 +9,7 @@ class LedModule {
 	CRGBPalette16 currentPalette;
 	TBlendType currentBlending;
 	CRGB leds[20];
+	bool on = false;
 
 public:
 	void setup();
